@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.tonybuilder.entities.CommitEntity" table="commit" schema="aosp_insight">
+        <id name="commitId" column="commit_id"/>
+        <property name="commitInProject" column="commit_in_project"/>
+        <property name="commitAuthor" column="commit_author"/>
+        <property name="commitAuthorMail" column="commit_author_mail"/>
+        <property name="commitAlterDate" column="commit_alter_date"/>
+        <property name="commitHashId" column="commit_hash_id"/>
+        <property name="commitSubmitDate" column="commit_submit_date"/>
+        <property name="commitAddedLines" column="commit_added_lines"/>
+        <property name="commitDeletedLines" column="commit_deleted_lines"/>
+        <property name="commitBranch" column="commit_branch"/>
+        <property name="commitChangedLines" column="commit_changed_lines"/>
+        <property name="commitLog" column="commit_log"/>
+    </class>
+</hibernate-mapping>
