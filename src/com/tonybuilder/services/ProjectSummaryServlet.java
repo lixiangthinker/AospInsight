@@ -27,8 +27,8 @@ public class ProjectSummaryServlet extends HttpServlet {
         ProjectSummaryEntityDao projectSummaryEntityDao = new ProjectSummaryEntityImpl();
 
         Calendar calendarSince = Calendar.getInstance();
-        calendarSince.set(Calendar.YEAR, 2018);
-        calendarSince.set(Calendar.MONTH, Calendar.MARCH);
+        calendarSince.set(Calendar.YEAR, 2017);
+        calendarSince.set(Calendar.MONTH, Calendar.DECEMBER);
         calendarSince.set(Calendar.DATE, 5);
 
         Date since = calendarSince.getTime();
