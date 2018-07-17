@@ -1,4 +1,4 @@
-package com.tonybuilder;
+package com.tonybuilder.services;
 
 import com.google.gson.Gson;
 import com.tonybuilder.dao.ProjectSummaryEntityDao;
@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-@WebServlet(name = "HelloWorldServlet", urlPatterns = {"/HelloWorld"})
-public class HelloWorldServlet extends HttpServlet {
+@WebServlet(name = "ProjectSummaryServlet", urlPatterns = {"/ProjectSummary.json"})
+public class ProjectSummaryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.doGet(request, response);
     }
@@ -23,7 +25,14 @@ public class HelloWorldServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Gson gson = new Gson();
         ProjectSummaryEntityDao projectSummaryEntityDao = new ProjectSummaryEntityImpl();
-        List<ProjectSummaryEntity> list = projectSummaryEntityDao.getProjectSummaryList();
+
+        Calendar calendarSince = Calendar.getInstance();
+        calendarSince.set(Calendar.YEAR, 2018);
+        calendarSince.set(Calendar.MONTH, Calendar.MARCH);
+        calendarSince.set(Calendar.DATE, 5);
+
+        Date since = calendarSince.getTime();
+        List<ProjectSummaryEntity> list = projectSummaryEntityDao.getProjectSummaryListByDate(since, null);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         String jsonStr = gson.toJson(list);

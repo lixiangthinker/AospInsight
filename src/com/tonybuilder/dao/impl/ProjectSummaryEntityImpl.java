@@ -3,10 +3,12 @@ package com.tonybuilder.dao.impl;
 import com.tonybuilder.dao.ProjectSummaryEntityDao;
 import com.tonybuilder.entities.ProjectSummaryEntity;
 import com.tonybuilder.utils.HibernateSessionFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.util.Date;
 import java.util.List;
 
 public class ProjectSummaryEntityImpl implements ProjectSummaryEntityDao {
@@ -20,6 +22,34 @@ public class ProjectSummaryEntityImpl implements ProjectSummaryEntityDao {
             Query<ProjectSummaryEntity> query = session.createQuery(queryString, ProjectSummaryEntity.class);
             query.setParameter(1, id);
             result = query.uniqueResult();
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    @Override
+    public List<ProjectSummaryEntity> getProjectSummaryListByDate(Date since, Date until) {
+        List<ProjectSummaryEntity> result = null;
+
+        if (since == null) {
+            since = new Date();
+        } else if (until == null) {
+            until = new Date();
+        }
+
+        String queryString = "from ProjectSummaryEntity p where p.projectSummarySince >= ?1 and p.projectSummarySince <= ?2";
+        Session session = HibernateSessionFactory.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<ProjectSummaryEntity> query = session.createQuery(queryString, ProjectSummaryEntity.class);
+            query.setParameter(1, since);
+            query.setParameter(2, until);
+            result = query.list();
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();

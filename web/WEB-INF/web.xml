@@ -6,7 +6,7 @@
     <!-- using @WebService instead
     <servlet>
         <servlet-name>HelloWorld</servlet-name>
-        <servlet-class>com.tonybuilder.HelloWorldServlet</servlet-class>
+        <servlet-class>com.tonybuilder.ProjectSummaryServletvlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HelloWorld</servlet-name>
