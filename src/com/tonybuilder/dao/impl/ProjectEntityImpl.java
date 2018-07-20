@@ -68,6 +68,57 @@ public class ProjectEntityImpl implements ProjectEntityDao {
         return result;
     }
 
+    private boolean isProjectExist(Session session, String projectName) {
+        boolean result = false;
+        String queryString = "select count(*) from ProjectEntity p where p.projectName=?1";
+        Query query = session.createQuery(queryString);
+        query.setParameter(1, projectName);
+        Long count = (Long) query.uniqueResult();
+        if (count != 0) {
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean addProjectList(List<ProjectEntity> projectList) {
+        boolean result;
+        Session session = HibernateSessionFactory.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            for (ProjectEntity p : projectList) {
+                if (isProjectExist(session, p.getProjectName())) {
+                    System.out.println("update project " + p.getProjectName());
+                    String queryString = "update ProjectEntity p set " +
+                            "p.projectPath = ?1, " +
+                            "p.projectIsDiscarded = ?2, " +
+                            "p.projectIsExternalSrc = ?3, " +
+                            "p.projectModuleType = ?4 " +
+                            "where p.projectName = ?5";
+                    Query query = session.createQuery(queryString);
+                    query.setParameter(1, p.getProjectPath());
+                    query.setParameter(2,p.getProjectIsDiscarded());
+                    query.setParameter(3,p.getProjectIsExternalSrc());
+                    query.setParameter(4,p.getProjectModuleType());
+                    query.setParameter(5, p.getProjectName());
+                    query.executeUpdate();
+                } else {
+                    System.out.println("insert project " + p.getProjectName());
+                    session.save(p);
+                }
+            }
+            transaction.commit();
+            result = true;
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+            result = false;
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
     @Override
     public boolean updateProject(ProjectEntity project) {
         boolean result;

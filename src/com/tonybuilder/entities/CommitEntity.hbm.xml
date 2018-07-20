@@ -5,7 +5,9 @@
 <hibernate-mapping>
 
     <class name="com.tonybuilder.entities.CommitEntity" table="commit" schema="aosp_insight">
-        <id name="commitId" column="commit_id"/>
+        <id name="commitId" column="commit_id">
+            <generator class="identity"/>
+        </id>
         <property name="commitInProject" column="commit_in_project"/>
         <property name="commitAuthor" column="commit_author"/>
         <property name="commitAuthorMail" column="commit_author_mail"/>
