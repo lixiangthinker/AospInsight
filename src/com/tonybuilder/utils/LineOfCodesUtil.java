@@ -16,7 +16,7 @@ import java.util.List;
 public class LineOfCodesUtil {
 
     private ProjectEntityDao projectEntityDao;
-    private String projectBasePrefix = "/home/lixiang/source/aosp/";
+    private String projectBasePrefix = GlobalSettings.AOSP_SOURCE_PATH_PREFIX;
 
     public LineOfCodesUtil() {
         projectEntityDao = new ProjectEntityImpl();

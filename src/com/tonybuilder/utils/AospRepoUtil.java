@@ -18,7 +18,7 @@ import org.dom4j.io.SAXReader;
 
 public class AospRepoUtil {
     private final String sourceRoot;
-    private static final String AOSP_ROOT = "/home/lixiang/source/aosp";
+    private static final String AOSP_ROOT = GlobalSettings.AOSP_SOURCE_PATH_PREFIX;
     private static final String REPO_PATH = ".repo/manifest.xml";
 
     final Logger log = Logger.getLogger("AospRepoUtil");
@@ -111,56 +111,46 @@ public class AospRepoUtil {
         return 0;
     }
 
-    public static final int PROJECT_CATEGORY_APP = 0;
-    public static final int PROJECT_CATEGORY_FRAMEWORK = 10;
-    public static final int PROJECT_CATEGORY_FRAMEWORK_NATIVE = 11;
-    public static final int PROJECT_CATEGORY_HAL = 20;
-    public static final int PROJECT_CATEGORY_BUILD = 30;
-    public static final int PROJECT_CATEGORY_TEST = 40;
-    public static final int PROJECT_CATEGORY_TOOLS = 50;
-    public static final int PROJECT_CATEGORY_PREBUILTS = 60;
-    public static final int PROJECT_CATEGORY_OTHER = 100;
-
     private int getProjectModuleType(ProjectEntity p) {
         String path = p.getProjectPath();
         if (path == null) {
-            return PROJECT_CATEGORY_OTHER;
+            return GlobalSettings.PROJECT_CATEGORY_OTHER;
         }
 
         if (path.startsWith("tools") || path.startsWith("toolchain")) {
-            return PROJECT_CATEGORY_TOOLS;
+            return GlobalSettings.PROJECT_CATEGORY_TOOLS;
         }
 
         if (path.startsWith("test") || path.startsWith("platform_testing")
                 || path.startsWith("cts") || path.startsWith("vts")) {
-            return PROJECT_CATEGORY_TEST;
+            return GlobalSettings.PROJECT_CATEGORY_TEST;
         }
 
         if (path.startsWith("system") || path.startsWith("libnativehelper")
                 || path.startsWith("dalvik") || path.startsWith("art")
                 || path.startsWith("bionic") || path.startsWith("bootable")) {
-            return PROJECT_CATEGORY_FRAMEWORK_NATIVE;
+            return GlobalSettings.PROJECT_CATEGORY_FRAMEWORK_NATIVE;
         }
 
         if (path.startsWith("prebuilts")) {
-            return PROJECT_CATEGORY_PREBUILTS;
+            return GlobalSettings.PROJECT_CATEGORY_PREBUILTS;
         }
 
         if (path.startsWith("pdk") || path.startsWith("sdk") || path.startsWith("build")) {
-            return PROJECT_CATEGORY_BUILD;
+            return GlobalSettings.PROJECT_CATEGORY_BUILD;
         }
 
         if (path.startsWith("packages")) {
-            return PROJECT_CATEGORY_APP;
+            return GlobalSettings.PROJECT_CATEGORY_APP;
         }
 
         if (path.startsWith("libcore") || path.startsWith("frameworks")) {
-            return PROJECT_CATEGORY_FRAMEWORK;
+            return GlobalSettings.PROJECT_CATEGORY_FRAMEWORK;
         }
 
         if (path.startsWith("hardware") || path.startsWith("device")) {
-            return PROJECT_CATEGORY_HAL;
+            return GlobalSettings.PROJECT_CATEGORY_HAL;
         }
-        return PROJECT_CATEGORY_OTHER;
+        return GlobalSettings.PROJECT_CATEGORY_OTHER;
     }
 }
