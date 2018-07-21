@@ -5,7 +5,9 @@
 <hibernate-mapping>
 
     <class name="com.tonybuilder.entities.ProjectEntity" table="project" schema="aosp_insight">
-        <id name="projectId" column="project_id"/>
+        <id name="projectId" column="project_id">
+            <generator class="identity"/>
+        </id>
         <property name="projectName" column="project_name"/>
         <property name="projectTotalLines" column="project_total_lines"/>
         <property name="projectLastSubmitData" column="project_last_submit_data"/>

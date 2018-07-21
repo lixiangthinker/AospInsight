@@ -9,6 +9,7 @@ public interface ProjectEntityDao {
     List<ProjectEntity> getProjectList();
     boolean addProject(ProjectEntity project);
     boolean addProjectList(List<ProjectEntity> projectList);
+    boolean updateProjectLoc(List<ProjectEntity> projectList);
     boolean updateProject(ProjectEntity project);
     boolean deleteProject(int id);
 }

@@ -60,7 +60,6 @@ public class AospRepoUtil {
         projectEntityDao.addProjectList(parseResult);
 
         System.out.println(parseResult.size() + " projects added to database");
-        return;
     }
 
     private List<ProjectEntity> parserXml(File xml) {

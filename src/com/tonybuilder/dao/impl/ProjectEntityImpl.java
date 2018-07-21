@@ -33,7 +33,7 @@ public class ProjectEntityImpl implements ProjectEntityDao {
     @Override
     public List<ProjectEntity> getProjectList() {
         List<ProjectEntity> result = null;
-        String queryString = "from ProjectEntity p";
+        String queryString = "from ProjectEntity p order by p.projectName asc";
         Session session = HibernateSessionFactory.getSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -79,6 +79,39 @@ public class ProjectEntityImpl implements ProjectEntityDao {
         }
         return result;
     }
+
+    @Override
+    public boolean updateProjectLoc(List<ProjectEntity> projectList) {
+            boolean result;
+            Session session = HibernateSessionFactory.getSession();
+            Transaction transaction = session.beginTransaction();
+            try {
+                for (ProjectEntity p : projectList) {
+                    if (isProjectExist(session, p.getProjectName())) {
+                        System.out.println("update project " + p.getProjectName());
+                        String queryString = "update ProjectEntity p set " +
+                                "p.projectTotalLines = ?1 " +
+                                "where p.projectName = ?2";
+                        Query query = session.createQuery(queryString);
+                        query.setParameter(1, p.getProjectTotalLines());
+                        query.setParameter(2, p.getProjectName());
+                        query.executeUpdate();
+                    } else {
+                        System.out.println("insert project " + p.getProjectName());
+                        session.save(p);
+                    }
+                }
+                transaction.commit();
+                result = true;
+            } catch (Exception e) {
+                transaction.rollback();
+                e.printStackTrace();
+                result = false;
+            } finally {
+                session.close();
+            }
+            return result;
+        }
 
     @Override
     public boolean addProjectList(List<ProjectEntity> projectList) {
