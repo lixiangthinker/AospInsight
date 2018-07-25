@@ -163,7 +163,7 @@ public class GitLogUtil {
 
         String[] parts = line.split(",");
         int index = 0;
-        while(index < parts.length) {
+        while (index < parts.length) {
             if (parts[index].contains("insertion")) {
                 break;
             }
@@ -183,7 +183,7 @@ public class GitLogUtil {
 
         String[] parts = line.split(",");
         int index = 0;
-        while(index < parts.length) {
+        while (index < parts.length) {
             if (parts[index].contains("deletion")) {
                 break;
             }
@@ -196,7 +196,7 @@ public class GitLogUtil {
     }
 
     private int getTotalLines(String line) {
-        return getAddedLines(line)+getDeletedLines(line);
+        return getAddedLines(line) + getDeletedLines(line);
     }
 
     private List<CommitEntity> parseGitLog(File gitLog) {
@@ -251,7 +251,7 @@ public class GitLogUtil {
                         } else {
                             state = ParingState.PARSING_CHANGED_FILES;
                             if (commitString != null) {
-                                commit.setCommitLog(commitString.toString());
+                                commit.setCommitLog(filterEmoji(commitString.toString(), " "));
                                 commitString = null;
                             }
                             if (changedFiles == null) {
@@ -289,7 +289,20 @@ public class GitLogUtil {
         }
         return result;
     }
-
+    /**
+     * emoji表情替换
+     *
+     * @param source 原字符串
+     * @param slipStr emoji表情替换成的字符串
+     * @return 过滤后的字符串
+     */
+    private String filterEmoji(String source,String slipStr) {
+        if(source != null) {
+            return source.replaceAll("[\\ud800\\udc00-\\udbff\\udfff\\ud800-\\udfff]", slipStr);
+        } else {
+            return source;
+        }
+    }
     private List<CommitEntity> parseProjectLog(String path) {
         System.out.println("parseProjectLog path " + path);
         List<CommitEntity> result = new ArrayList<>();
@@ -305,16 +318,7 @@ public class GitLogUtil {
             return result;
         }
 
-        File[] gitCacheFiles = projectDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String s) {
-                boolean result = false;
-                if (s.startsWith("git-log-") && s.endsWith(".log")) {
-                    result = true;
-                }
-                return result;
-            }
-        });
+        File[] gitCacheFiles = projectDir.listFiles(new GitLogCacheFileFilter());
 
         if (gitCacheFiles == null || gitCacheFiles.length == 0) {
             return result;
@@ -337,24 +341,13 @@ public class GitLogUtil {
         return result;
     }
 
-    public static void main(String[] args) {
-        GitLogUtil gitLogUtil = new GitLogUtil();
-//        boolean result = gitLogUtil.genProjectGitLogSince("frameworks/base", "2018-07-01");
-//        int projectId = gitLogUtil.projectEntityDao.getProjectIdByPath("frameworks/base");
-//        List<CommitEntity> commitEntityList = gitLogUtil.parseProjectLog("frameworks/base");
-//        System.out.println("commitEntityList.size = " + commitEntityList.size());
-//        for (CommitEntity c: commitEntityList) {
-//            c.setCommitInProject(projectId);
-//            c.setCommitBranch("master");
-//        }
-//
-//        result = gitLogUtil.commitEntityDao.addCommitList(commitEntityList);
-
+    private boolean getGitLogForAllRepo(String since) {
+        boolean result = false;
         /* get project list*/
-        List<ProjectEntity> projectEntityList = gitLogUtil.projectEntityDao.getProjectList();
+        List<ProjectEntity> projectEntityList = projectEntityDao.getProjectList();
         if (projectEntityList == null || projectEntityList.size() == 0) {
             System.out.println("could not get project list");
-            return;
+            return result;
         }
 
         int totalProjects = projectEntityList.size();
@@ -362,7 +355,7 @@ public class GitLogUtil {
         for (ProjectEntity p : projectEntityList) {
             System.out.println("current " + currentProject + " totalProject " + totalProjects);
             currentProject++;
-            boolean result = gitLogUtil.genProjectGitLogSince(p.getProjectPath(), "2018-06-01");
+            result = genProjectGitLogSince(p.getProjectPath(), since);
             if (!result) {
                 System.out.println("could not generate git log for " + p.getProjectPath());
                 continue;
@@ -378,16 +371,75 @@ public class GitLogUtil {
                 continue;
             }
 
-            List<CommitEntity> commitEntityList = gitLogUtil.parseProjectLog(p.getProjectPath());
-            int projectId = gitLogUtil.projectEntityDao.getProjectIdByPath(p.getProjectPath());
+            List<CommitEntity> commitEntityList = parseProjectLog(p.getProjectPath());
+            int projectId = projectEntityDao.getProjectIdByPath(p.getProjectPath());
             System.out.println("commitEntityList.size = " + commitEntityList.size());
-            for (CommitEntity c: commitEntityList) {
+            for (CommitEntity c : commitEntityList) {
                 c.setCommitInProject(projectId);
                 c.setCommitBranch("master");
             }
-            result = gitLogUtil.commitEntityDao.addCommitList(commitEntityList);
+            result = commitEntityDao.addCommitList(commitEntityList);
         }
+
+        return result;
+    }
+
+    private boolean getGItLogForSingleRepo(String path, String since, boolean cleanCache) {
+        boolean result = false;
+        File projectDir = new File(projectBasePrefix, path);
+        if (!projectDir.exists() || !projectDir.isDirectory()) {
+            System.out.println("project directory is invalid, path = " + path);
+            return result;
+        }
+
+        if (cleanCache) {
+            File[] gitCacheFiles = projectDir.listFiles(new GitLogCacheFileFilter());
+
+            // clean previous cache log files
+            if (gitCacheFiles != null && gitCacheFiles.length != 0) {
+                for (File cacheFile : gitCacheFiles) {
+                    cacheFile.delete();
+                }
+            }
+
+            result = genProjectGitLogSince(path, since);
+            if (!result) {
+                System.out.println("could not generate git log for " + path + " since " + since);
+                return false;
+            }
+        }
+
+        int projectId = projectEntityDao.getProjectIdByPath(path);
+        List<CommitEntity> commitEntityList = parseProjectLog(path);
+        System.out.println("path: " + path + " since: " + since + " commitEntityList.size = " + commitEntityList.size());
+        for (CommitEntity c : commitEntityList) {
+            c.setCommitInProject(projectId);
+            c.setCommitBranch("master");
+        }
+
+        result = commitEntityDao.addCommitList(commitEntityList);
+        return result;
+    }
+
+    public static void main(String[] args) {
+        GitLogUtil gitLogUtil = new GitLogUtil();
+
+        gitLogUtil.getGItLogForSingleRepo("frameworks/base", "2017-01-01", false);
+
+        //gitLogUtil.getGitLogForAllRepo("2018-06-01");
 
         System.out.println("End of GitLogUtil.main()");
     }
+
+    private class GitLogCacheFileFilter implements FilenameFilter {
+        @Override
+        public boolean accept(File file, String s) {
+            boolean result = false;
+            if (s.startsWith("git-log-") && s.endsWith(".log")) {
+                result = true;
+            }
+            return result;
+        }
+    }
+
 }
