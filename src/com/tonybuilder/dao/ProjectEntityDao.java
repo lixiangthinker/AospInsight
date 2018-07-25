@@ -7,6 +7,7 @@ import java.util.List;
 public interface ProjectEntityDao {
     ProjectEntity getProjectById(int id);
     List<ProjectEntity> getProjectList();
+    int getProjectIdByPath(String path);
     boolean addProject(ProjectEntity project);
     boolean addProjectList(List<ProjectEntity> projectList);
     boolean updateProjectLoc(List<ProjectEntity> projectList);

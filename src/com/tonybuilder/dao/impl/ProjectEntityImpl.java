@@ -50,6 +50,29 @@ public class ProjectEntityImpl implements ProjectEntityDao {
     }
 
     @Override
+    public int getProjectIdByPath(String path) {
+        int result = -1;
+        String queryString = "from ProjectEntity p where p.projectPath = ?1";
+        Session session = HibernateSessionFactory.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<ProjectEntity> query = session.createQuery(queryString, ProjectEntity.class);
+            query.setParameter(1, path);
+            ProjectEntity project = query.uniqueResult();
+            if (project != null) {
+                result = project.getProjectId();
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    @Override
     public boolean addProject(ProjectEntity project) {
         boolean result;
         Session session = HibernateSessionFactory.getSession();

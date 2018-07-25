@@ -8,6 +8,7 @@ public interface CommitEntityDao {
     CommitEntity getCommitById(int id);
     List<CommitEntity> getCommitList();
     boolean addCommit(CommitEntity commit);
+    boolean addCommitList(List<CommitEntity> commitEntityList);
     boolean updateCommit(CommitEntity commit);
     boolean deleteCommit(int id);
 }

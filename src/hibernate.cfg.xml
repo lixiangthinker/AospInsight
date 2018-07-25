@@ -26,6 +26,11 @@
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>
 
+        <!-- commit every 50 commands-->
+        <property name="hibernate.jdbc.batch_size">50</property>
+        <!-- disable second level cache-->
+        <property name="hiberante.cache.use_second_level_cache">false</property>
+
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">update</property>
         <mapping class="com.tonybuilder.entities.CommitEntity"/>

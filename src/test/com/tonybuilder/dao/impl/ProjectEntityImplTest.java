@@ -2,23 +2,21 @@ package test.com.tonybuilder.dao.impl;
 
 import com.tonybuilder.dao.ProjectEntityDao;
 import com.tonybuilder.dao.impl.ProjectEntityImpl;
-import com.tonybuilder.entities.ProjectEntity;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ProjectEntityImpl Tester.
  *
  * @author <Authors name>
  * @version 1.0
- * @since <pre>七月 19, 2018</pre>
+ * @since <pre>七月 25, 2018</pre>
  */
 public class ProjectEntityImplTest {
-    ProjectEntityDao projectEntityDao;
+
+    private ProjectEntityDao projectEntityDao;
     @Before
     public void before() throws Exception {
         projectEntityDao = new ProjectEntityImpl();
@@ -45,6 +43,21 @@ public class ProjectEntityImplTest {
     }
 
     /**
+     * Method: getProjectIdByPath(String path)
+     */
+    @Test
+    public void testGetProjectIdByPath() throws Exception {
+        int id = projectEntityDao.getProjectIdByPath("frameworks/base");
+        System.out.println("id = " + id);
+        Assert.assertNotEquals(-1, id);
+        id = projectEntityDao.getProjectIdByPath("build/kati");
+        System.out.println("id = " + id);
+        Assert.assertNotEquals(-1, id);
+        id = projectEntityDao.getProjectIdByPath("blablablabla");
+        Assert.assertEquals(-1, id);
+    }
+
+    /**
      * Method: addProject(ProjectEntity project)
      */
     @Test
@@ -52,31 +65,20 @@ public class ProjectEntityImplTest {
 //TODO: Test goes here... 
     }
 
-    private ProjectEntity getEntity(String projectName, String projectPath) {
-        ProjectEntity entity = new ProjectEntity();
-        if (projectName != null) {
-            entity.setProjectName(projectName);
-        }
-
-        if (projectPath != null) {
-            entity.setProjectPath(projectPath);
-        }
-
-        return entity;
+    /**
+     * Method: updateProjectLoc(List<ProjectEntity> projectList)
+     */
+    @Test
+    public void testUpdateProjectLoc() throws Exception {
+//TODO: Test goes here... 
     }
 
-    private List<ProjectEntity> getTestEntityList() {
-        List<ProjectEntity> entityList = new ArrayList<>();
-        entityList.add(getEntity("platform/build/blueprint", "build/blueprint"));
-        entityList.add(getEntity("platform/frameworks/base", "frameworks/base"));
-        return entityList;
-    }
     /**
      * Method: addProjectList(List<ProjectEntity> projectList)
      */
     @Test
     public void testAddProjectList() throws Exception {
-        projectEntityDao.addProjectList(getTestEntityList());
+//TODO: Test goes here... 
     }
 
     /**
@@ -94,4 +96,24 @@ public class ProjectEntityImplTest {
     public void testDeleteProject() throws Exception {
 //TODO: Test goes here... 
     }
-}
+
+
+    /**
+     * Method: isProjectExist(Session session, String projectName)
+     */
+    @Test
+    public void testIsProjectExist() throws Exception {
+//TODO: Test goes here... 
+/* 
+try { 
+   Method method = ProjectEntityImpl.getClass().getMethod("isProjectExist", Session.class, String.class); 
+   method.setAccessible(true); 
+   method.invoke(<Object>, <Parameters>); 
+} catch(NoSuchMethodException e) { 
+} catch(IllegalAccessException e) { 
+} catch(InvocationTargetException e) { 
+} 
+*/
+    }
+
+} 

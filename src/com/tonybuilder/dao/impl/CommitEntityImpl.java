@@ -70,6 +70,73 @@ public class CommitEntityImpl implements CommitEntityDao {
         return result;
     }
 
+    private boolean isCommitExist(Session session, String hashId, int project) {
+        boolean result = false;
+        String queryString = "select count(*) from CommitEntity c where c.commitHashId=?1 and c.commitInProject = ?2";
+        Query query = session.createQuery(queryString);
+        query.setParameter(1, hashId);
+        query.setParameter(2, project);
+        Long count = (Long) query.uniqueResult();
+        if (count != 0) {
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean addCommitList(List<CommitEntity> commitEntityList) {
+        boolean result = false;
+        Session session = HibernateSessionFactory.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            for (CommitEntity c : commitEntityList) {
+                if (isCommitExist(session, c.getCommitHashId(), c.getCommitInProject())) {
+                    System.out.println("update commit " + c.getCommitHashId());
+                    String queryString = "update CommitEntity c set " +
+                            "c.commitAddedLines = ?1, " +
+                            "c.commitAlterDate = ?2, " +
+                            "c.commitAuthor = ?3, " +
+                            "c.commitAuthorMail = ?4, " +
+                            "c.commitBranch = ?5, " +
+                            "c.commitChangedLines = ?6, " +
+                            "c.commitDeletedLines = ?7, " +
+                            "c.commitInProject = ?8, " +
+                            "c.commitHashId = ?9, " +
+                            "c.commitLog = ?10, " +
+                            "c.commitSubmitDate = ?11 " +
+                            "where c.commitHashId = ?12";
+                    Query query = session.createQuery(queryString);
+                    query.setParameter(1, c.getCommitAddedLines());
+                    query.setParameter(2, c.getCommitAlterDate());
+                    query.setParameter(3, c.getCommitAuthor());
+                    query.setParameter(4, c.getCommitAuthorMail());
+                    query.setParameter(5, c.getCommitBranch());
+                    query.setParameter(6, c.getCommitChangedLines());
+                    query.setParameter(7, c.getCommitDeletedLines());
+                    query.setParameter(8, c.getCommitInProject());
+                    query.setParameter(9, c.getCommitHashId());
+                    query.setParameter(10, c.getCommitLog());
+                    query.setParameter(11, c.getCommitSubmitDate());
+                    query.setParameter(12, c.getCommitHashId());
+
+                    query.executeUpdate();
+                } else {
+                    System.out.println("insert commit " + c.getCommitHashId());
+                    session.save(c);
+                }
+            }
+            transaction.commit();
+            result = true;
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+            result = false;
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
     @Override
     public boolean updateCommit(CommitEntity commit) {
         boolean result;
