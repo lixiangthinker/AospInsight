@@ -8,7 +8,9 @@ import com.tonybuilder.entities.CommitEntity;
 import com.tonybuilder.entities.ProjectEntity;
 
 import java.io.*;
-import java.time.LocalDate;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -140,18 +142,26 @@ public class GitLogUtil {
         return mail;
     }
 
-    private String getAuthorDate(String line) {
+    // Wed Jul 4 16:41:14 2018 +0100
+    private Timestamp parseStringDate(String strDate) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE MMM d HH:mm:ss yyyy Z").withLocale(Locale.ENGLISH);
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(strDate, dateTimeFormatter);
+        Instant instant = zonedDateTime.toInstant();
+        return Timestamp.from(instant);
+    }
+
+    private Timestamp getAuthorDate(String line) {
         int authorDateIndex = "AuthorDate: ".length();
         String authorDate = line.substring(authorDateIndex);
         authorDate = authorDate.trim();
-        return authorDate;
+        return parseStringDate(authorDate);
     }
 
-    private String getCommitDate(String line) {
+    private Timestamp getCommitDate(String line) {
         int commitDateIndex = "CommitDate: ".length();
         String commitDate = line.substring(commitDateIndex);
         commitDate = commitDate.trim();
-        return commitDate;
+        return parseStringDate(commitDate);
     }
 
     //1 file changed, 1 insertion(+), 2 deletions(-)
@@ -289,20 +299,22 @@ public class GitLogUtil {
         }
         return result;
     }
+
     /**
      * emoji表情替换
      *
-     * @param source 原字符串
+     * @param source  原字符串
      * @param slipStr emoji表情替换成的字符串
      * @return 过滤后的字符串
      */
-    private String filterEmoji(String source,String slipStr) {
-        if(source != null) {
+    private String filterEmoji(String source, String slipStr) {
+        if (source != null) {
             return source.replaceAll("[\\ud800\\udc00-\\udbff\\udfff\\ud800-\\udfff]", slipStr);
         } else {
-            return source;
+            return null;
         }
     }
+
     private List<CommitEntity> parseProjectLog(String path) {
         System.out.println("parseProjectLog path " + path);
         List<CommitEntity> result = new ArrayList<>();

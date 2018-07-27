@@ -1,6 +1,7 @@
 package com.tonybuilder.entities;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -10,9 +11,9 @@ public class CommitEntity {
     private Integer commitInProject;
     private String commitAuthor;
     private String commitAuthorMail;
-    private String commitAlterDate;
+    private Timestamp commitAlterDate;
     private String commitHashId;
-    private String commitSubmitDate;
+    private Timestamp commitSubmitDate;
     private Integer commitAddedLines;
     private Integer commitDeletedLines;
     private String commitBranch;
@@ -60,17 +61,17 @@ public class CommitEntity {
     }
 
     @Basic
-    @Column(name = "commit_alter_date", nullable = true, length = 45)
-    public String getCommitAlterDate() {
+    @Column(name = "commit_alter_date", nullable = true)
+    public Timestamp getCommitAlterDate() {
         return commitAlterDate;
     }
 
-    public void setCommitAlterDate(String commitAlterDate) {
+    public void setCommitAlterDate(Timestamp commitAlterDate) {
         this.commitAlterDate = commitAlterDate;
     }
 
     @Basic
-    @Column(name = "commit_hash_id", nullable = true, length = 45)
+    @Column(name = "commit_hash_id", nullable = true)
     public String getCommitHashId() {
         return commitHashId;
     }
@@ -80,12 +81,12 @@ public class CommitEntity {
     }
 
     @Basic
-    @Column(name = "commit_submit_date", nullable = true, length = 45)
-    public String getCommitSubmitDate() {
+    @Column(name = "commit_submit_date", nullable = true)
+    public Timestamp getCommitSubmitDate() {
         return commitSubmitDate;
     }
 
-    public void setCommitSubmitDate(String commitSubmitDate) {
+    public void setCommitSubmitDate(Timestamp commitSubmitDate) {
         this.commitSubmitDate = commitSubmitDate;
     }
 

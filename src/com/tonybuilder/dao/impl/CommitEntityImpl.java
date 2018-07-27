@@ -2,11 +2,17 @@ package com.tonybuilder.dao.impl;
 
 import com.tonybuilder.dao.CommitEntityDao;
 import com.tonybuilder.entities.CommitEntity;
+import com.tonybuilder.utils.DateTimeUtils;
 import com.tonybuilder.utils.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +46,29 @@ public class CommitEntityImpl implements CommitEntityDao {
         Transaction transaction = session.beginTransaction();
         try {
             Query<CommitEntity> query = session.createQuery(queryString, CommitEntity.class);
+            result = query.list();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<CommitEntity> getCommitList(YearMonth month) {
+        List<CommitEntity> result = null;
+        Timestamp[] since = DateTimeUtils.getSinceAndUntilTsByMonth(month);
+
+        String queryString = "from CommitEntity c where c.commitSubmitDate > ?1 and c.commitSubmitDate <?2";
+        Session session = HibernateSessionFactory.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<CommitEntity> query = session.createQuery(queryString, CommitEntity.class);
+            query.setParameter(1, since[0]);
+            query.setParameter(2, since[1]);
             result = query.list();
             transaction.commit();
         } catch (Exception e) {

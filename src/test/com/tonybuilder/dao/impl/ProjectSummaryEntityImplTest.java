@@ -43,15 +43,6 @@ public class ProjectSummaryEntityImplTest {
      */
     @Test
     public void testGetProjectSummaryListByDate() throws Exception {
-//        Date since = new Date();
-//        System.out.println(since.toString());
-//
-//        ProjectSummaryEntity projectSummaryEntity = projectSummaryEntityDao.getProjectSummaryById(0);
-//        Timestamp time = projectSummaryEntity.getProjectSummarySince();
-//        Date projectSummarySinceDate = new Date(time.getTime());
-//        System.out.println(projectSummarySinceDate);
-//
-//        System.out.println(since.before(projectSummarySinceDate));
 
         Calendar calendarSince = Calendar.getInstance();
         Calendar calendarUntil = Calendar.getInstance();

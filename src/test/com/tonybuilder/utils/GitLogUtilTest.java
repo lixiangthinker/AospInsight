@@ -8,6 +8,9 @@ import org.junit.After;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 /**
  * GitLogUtil Tester.
@@ -88,6 +91,19 @@ try {
             Assert.assertEquals(0, deletion);
             deletion = (int) method.invoke(gitLogUtil, "1 file changed, 1 deletions(-)");
             Assert.assertEquals(1, deletion);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Method: private Timestamp parseStringDate(String strDate)
+     */
+    @Test
+    public void testParseStringDate() throws Exception {
+        try {
+            Method method = GitLogUtil.class.getDeclaredMethod("parseStringDate", String.class);
+            method.setAccessible(true);
+            Timestamp timestamp = (Timestamp) method.invoke(gitLogUtil, "Wed Jul 4 16:41:14 2018 +0100");
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

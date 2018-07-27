@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ProjectEntityDao {
     ProjectEntity getProjectById(int id);
+    ProjectEntity getProjectByPath(String path);
     List<ProjectEntity> getProjectList();
     int getProjectIdByPath(String path);
     boolean addProject(ProjectEntity project);

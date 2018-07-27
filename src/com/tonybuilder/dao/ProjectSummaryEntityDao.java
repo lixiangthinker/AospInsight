@@ -10,6 +10,7 @@ public interface ProjectSummaryEntityDao {
     List<ProjectSummaryEntity> getProjectSummaryList();
     List<ProjectSummaryEntity> getProjectSummaryListByDate(Date since, Date until);
     boolean addProjectSummary(ProjectSummaryEntity projectSummary);
+    boolean addProjectSummaryList(List<ProjectSummaryEntity> projectSummaryEntities);
     boolean updateProjectSummary(ProjectSummaryEntity projectSummary);
     boolean deleteProjectSummary(int id);
 }

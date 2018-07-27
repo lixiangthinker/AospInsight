@@ -2,6 +2,7 @@ package test.com.tonybuilder.dao.impl;
 
 import com.tonybuilder.dao.ProjectEntityDao;
 import com.tonybuilder.dao.impl.ProjectEntityImpl;
+import com.tonybuilder.entities.ProjectEntity;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
@@ -33,7 +34,17 @@ public class ProjectEntityImplTest {
     public void testGetProjectById() throws Exception {
 //TODO: Test goes here... 
     }
-
+    /**
+     * Method: getProjectByPath(String path)
+     */
+    @Test
+    public void testGetProjectByPath() throws Exception {
+        ProjectEntity project = projectEntityDao.getProjectByPath("frameworks/base");
+        System.out.println("get project = " + project.getProjectName());
+        Assert.assertNotEquals(-1, project.getProjectId());
+        project = projectEntityDao.getProjectByPath("blablabla/base");
+        Assert.assertNull(project);
+    }
     /**
      * Method: getProjectList()
      */

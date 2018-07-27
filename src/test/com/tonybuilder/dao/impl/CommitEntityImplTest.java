@@ -8,6 +8,11 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -28,7 +33,14 @@ public class CommitEntityImplTest {
     public void after() throws Exception {
         commitEntityDao = null;
     }
-
+    private Timestamp parseStringDate(String strDate) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy ZZZZ");
+        LocalDateTime dateTime = LocalDateTime.parse(strDate, dateTimeFormatter);
+        System.out.println("dateTime = " + dateTime);
+        Timestamp timestamp = Timestamp.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        System.out.println("timestamp = " + timestamp);
+        return timestamp;
+    }
     private CommitEntity getFakeCommitEntity() {
         String commitLog = "    Remove unusual static method call\n" +
                 "    \n" +
@@ -45,7 +57,7 @@ public class CommitEntityImplTest {
         commit.setCommitInProject(0);
         commit.setCommitAuthor("Neil Fuller");
         commit.setCommitAuthorMail("nfuller@google.com");
-        commit.setCommitAlterDate("2018-07-04");
+        commit.setCommitAlterDate(parseStringDate("Wed Jul 4 16:41:14 2018 +0100"));
         commit.setCommitDeletedLines(200);
         commit.setCommitChangedLines(1200);
         commit.setCommitAddedLines(1000);
@@ -79,6 +91,19 @@ public class CommitEntityImplTest {
         Assert.assertEquals("9c610f7567bc713e802842bd6c541d22941d8cea", commit.get(0).getCommitHashId());
     }
 
+    /**
+     * Method: getCommitList(YearMonth month)
+     */
+    @Test
+    public void testGetCommitListByMonth() throws Exception {
+        YearMonth month = YearMonth.of(2018, 6);
+        List<CommitEntity> commitList = commitEntityDao.getCommitList(month);
+        Assert.assertNotNull(commitList);
+        System.out.println("commitList.size() " + commitList.size());
+        for(CommitEntity c: commitList) {
+            System.out.println(c.getCommitSubmitDate());
+        }
+    }
     /**
      * Method: getCommitById(int id)
      */

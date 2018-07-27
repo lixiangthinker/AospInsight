@@ -31,6 +31,26 @@ public class ProjectEntityImpl implements ProjectEntityDao {
     }
 
     @Override
+    public ProjectEntity getProjectByPath(String path) {
+        ProjectEntity result = null;
+        String queryString = "from ProjectEntity p where p.projectPath=?1";
+        Session session = HibernateSessionFactory.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<ProjectEntity> query = session.createQuery(queryString, ProjectEntity.class);
+            query.setParameter(1, path);
+            result = query.uniqueResult();
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    @Override
     public List<ProjectEntity> getProjectList() {
         List<ProjectEntity> result = null;
         String queryString = "from ProjectEntity p order by p.projectName asc";
