@@ -2,6 +2,7 @@ package com.tonybuilder.utils;
 
 public class GlobalSettings {
     public static final String AOSP_SOURCE_PATH_PREFIX = "/home/lixiang/source/aosp/";
+    public static final String CACHE_ROOT = AOSP_SOURCE_PATH_PREFIX + ".insightCache";
 
     public static final int PROJECT_CATEGORY_APP = 0;
     public static final int PROJECT_CATEGORY_FRAMEWORK = 10;

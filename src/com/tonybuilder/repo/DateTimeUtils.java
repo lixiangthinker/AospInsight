@@ -20,6 +20,7 @@ public class DateTimeUtils {
         Timestamp tsSince = Timestamp.from(zonedSince.toInstant());
         Timestamp tsUntil = Timestamp.from(zonedSince.plusMonths(1).toInstant());
         Timestamp[] result = new Timestamp[2];
+        System.out.println("since = " + tsSince + " until = " + tsUntil);
         result[0] = tsSince;
         result[1] = tsUntil;
         return result;

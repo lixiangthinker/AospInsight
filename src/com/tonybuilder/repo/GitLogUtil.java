@@ -53,7 +53,7 @@ public class GitLogUtil {
         }
 
         LocalDate sinceDate = LocalDate.parse(since, DateTimeFormatter.ISO_DATE);
-        //System.out.println("genProjectGitLogSince sinceDate: " + sinceDate + " project: " + path);
+        System.out.println("genProjectGitLogSince sinceDate: " + sinceDate + " project: " + path);
 
         File projectDir = new File(projectBasePrefix, path);
 
@@ -448,7 +448,7 @@ public class GitLogUtil {
     public static void main(String[] args) {
         GitLogUtil gitLogUtil = new GitLogUtil();
 
-        gitLogUtil.getGitLogForSingleRepo("frameworks/base", "2017-01-01", false);
+        gitLogUtil.getGitLogForSingleRepo("frameworks/base", "2018-07-01", true);
 
         //gitLogUtil.getGitLogForAllRepo("2018-06-01");
 

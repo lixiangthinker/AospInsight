@@ -37,7 +37,7 @@ public class ProjectSummaryUtil {
         YearMonth sinceDate = YearMonth.of(2017, 1);
         YearMonth untilDate = YearMonth.now();
         util.genProjectSummaryForSingleProject(project, sinceDate, untilDate);
-        System.out.println("End of ProjectSummaryUtil.main()");
+        System.exit(0);
     }
 
     private boolean genProjectSummaryForSingleProject(ProjectEntity project, YearMonth sinceDate, YearMonth untilDate) {
@@ -66,6 +66,9 @@ public class ProjectSummaryUtil {
                 totalDeletedLines += c.getCommitDeletedLines();
                 totalChangedLines += c.getCommitChangedLines();
             }
+            System.out.println("genProjectSummaryForSingleProject month = " + month
+                    + " commits = " + commitEntities.size() + " inserts = " + totalAddedLines
+                    + " deletes = " + totalDeletedLines);
 
             Timestamp[] tsSince = DateTimeUtils.getSinceAndUntilTsByMonth(month);
             projectSummary.setProjectSummarySince(tsSince[0]);
@@ -75,6 +78,8 @@ public class ProjectSummaryUtil {
             projectSummary.setProjectSummaryTotal(totalChangedLines);
 
             projectSummaryEntities.add(projectSummary);
+            projectSummary = new ProjectSummaryEntity();
+            projectSummary.setProjectSummaryOrigId(projectId);
         }
 
         projectSummaryEntityDao.addProjectSummaryList(projectSummaryEntities);

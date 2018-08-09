@@ -61,6 +61,7 @@ public class AospRepoUtil {
         projectEntityDao.addProjectList(parseResult);
 
         System.out.println(parseResult.size() + " projects added to database");
+        System.exit(0);
     }
 
     private List<ProjectEntity> parserXml(File xml) {
@@ -109,6 +110,15 @@ public class AospRepoUtil {
     }
 
     private Byte isProjectDiscarded(ProjectEntity p) {
+        if (p == null || p.getProjectPath() == null) {
+            return 0;
+        }
+
+        File projectPath = new File(AOSP_ROOT, p.getProjectPath());
+
+        if (!projectPath.exists()) {
+            return 1;
+        }
         return 0;
     }
 
