@@ -1,4 +1,4 @@
-package com.tonybuilder.utils;
+package com.tonybuilder.repo;
 
 import com.tonybuilder.dao.CommitEntityDao;
 import com.tonybuilder.dao.ProjectEntityDao;

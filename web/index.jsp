@@ -13,7 +13,7 @@
 </head>
 <body>
 <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-<div id="main" style="width: 1000px;height:600px;"></div>
+<div id="main" style="width: 1000px;height:600px;MARGIN-RIGHT:auto;MARGIN-LEFT:auto"></div>
 <script type="text/javascript" charset="UTF-8">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
@@ -42,7 +42,7 @@
                     }
                 }
             }
-        })
+        });
         return arrDeletedLines,arrAddedLines,arrChangedLines;
     }
     getProjectChangedLines();
@@ -67,6 +67,23 @@
             }
         },
         calculable : true,
+        dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                xAxisIndex: [0],
+                start: 1,
+                end: 50
+            },
+            {
+                type: 'slider',
+                show: true,
+                yAxisIndex: [0],
+                left: '93%',
+                start: 29,
+                end: 36
+            }
+        ],
         xAxis : [
             {
                 type : 'category',
@@ -85,34 +102,12 @@
                 type:'bar',
                 data:arrAddedLines,
                 //data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-                markPoint : {
-                    data : [
-                        {type : 'max', name: '最大值'},
-                        {type : 'min', name: '最小值'}
-                    ]
-                },
-                markLine : {
-                    data : [
-                        {type : 'average', name: '平均值'}
-                    ]
-                }
             },
             {
                 name:'代码减少量',
                 type:'bar',
                 data:arrDeletedLines,
                 //data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-                markPoint : {
-                    data : [
-                        {name : '年最高', value : 182.2, xAxis: 7, yAxis: 183},
-                        {name : '年最低', value : 2.3, xAxis: 11, yAxis: 3}
-                    ]
-                },
-                markLine : {
-                    data : [
-                        {type : 'average', name : '平均值'}
-                    ]
-                }
             }
         ]
     };

@@ -26,13 +26,14 @@ public class ProjectSummaryServlet extends HttpServlet {
         Gson gson = new Gson();
         ProjectSummaryEntityDao projectSummaryEntityDao = new ProjectSummaryEntityImpl();
 
-        Calendar calendarSince = Calendar.getInstance();
-        calendarSince.set(Calendar.YEAR, 2017);
-        calendarSince.set(Calendar.MONTH, Calendar.DECEMBER);
-        calendarSince.set(Calendar.DATE, 5);
-
-        Date since = calendarSince.getTime();
-        List<ProjectSummaryEntity> list = projectSummaryEntityDao.getProjectSummaryListByDate(since, null);
+//        Calendar calendarSince = Calendar.getInstance();
+//        calendarSince.set(Calendar.YEAR, 2017);
+//        calendarSince.set(Calendar.MONTH, Calendar.DECEMBER);
+//        calendarSince.set(Calendar.DATE, 5);
+//
+//        Date since = calendarSince.getTime();
+        //List<ProjectSummaryEntity> list = projectSummaryEntityDao.getProjectSummaryListByDate(since, null);
+        List<ProjectSummaryEntity> list = projectSummaryEntityDao.getProjectSummaryList();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         String jsonStr = gson.toJson(list);

@@ -1,4 +1,4 @@
-package com.tonybuilder.utils;
+package com.tonybuilder.repo;
 
 import com.tonybuilder.dao.CommitEntityDao;
 import com.tonybuilder.dao.ProjectEntityDao;
@@ -6,9 +6,9 @@ import com.tonybuilder.dao.impl.CommitEntityImpl;
 import com.tonybuilder.dao.impl.ProjectEntityImpl;
 import com.tonybuilder.entities.CommitEntity;
 import com.tonybuilder.entities.ProjectEntity;
+import com.tonybuilder.utils.GlobalSettings;
 
 import java.io.*;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -396,7 +396,26 @@ public class GitLogUtil {
         return result;
     }
 
-    private boolean getGItLogForSingleRepo(String path, String since, boolean cleanCache) {
+    public static boolean cleanCache(File projectDir) {
+        boolean result = false;
+        if (projectDir == null || !projectDir.isDirectory()) {
+            System.out.println("cleanCache could not clean cache");
+            return false;
+        }
+
+        File[] gitCacheFiles = projectDir.listFiles(new GitLogCacheFileFilter());
+
+        // clean previous cache log files
+        if (gitCacheFiles != null && gitCacheFiles.length != 0) {
+            for (File cacheFile : gitCacheFiles) {
+                result = cacheFile.delete();
+            }
+        }
+
+        return result;
+    }
+
+    private boolean getGitLogForSingleRepo(String path, String since, boolean cleanCache) {
         boolean result = false;
         File projectDir = new File(projectBasePrefix, path);
         if (!projectDir.exists() || !projectDir.isDirectory()) {
@@ -405,14 +424,7 @@ public class GitLogUtil {
         }
 
         if (cleanCache) {
-            File[] gitCacheFiles = projectDir.listFiles(new GitLogCacheFileFilter());
-
-            // clean previous cache log files
-            if (gitCacheFiles != null && gitCacheFiles.length != 0) {
-                for (File cacheFile : gitCacheFiles) {
-                    cacheFile.delete();
-                }
-            }
+            cleanCache(projectDir);
 
             result = genProjectGitLogSince(path, since);
             if (!result) {
@@ -436,14 +448,14 @@ public class GitLogUtil {
     public static void main(String[] args) {
         GitLogUtil gitLogUtil = new GitLogUtil();
 
-        gitLogUtil.getGItLogForSingleRepo("frameworks/base", "2017-01-01", false);
+        gitLogUtil.getGitLogForSingleRepo("frameworks/base", "2017-01-01", false);
 
         //gitLogUtil.getGitLogForAllRepo("2018-06-01");
 
-        System.out.println("End of GitLogUtil.main()");
+        System.exit(0);
     }
 
-    private class GitLogCacheFileFilter implements FilenameFilter {
+    public static class GitLogCacheFileFilter implements FilenameFilter {
         @Override
         public boolean accept(File file, String s) {
             boolean result = false;

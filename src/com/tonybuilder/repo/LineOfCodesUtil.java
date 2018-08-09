@@ -1,8 +1,9 @@
-package com.tonybuilder.utils;
+package com.tonybuilder.repo;
 
 import com.tonybuilder.dao.ProjectEntityDao;
 import com.tonybuilder.dao.impl.ProjectEntityImpl;
 import com.tonybuilder.entities.ProjectEntity;
+import com.tonybuilder.utils.GlobalSettings;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -91,6 +92,26 @@ public class LineOfCodesUtil {
         }
 
         return 0;
+    }
+
+    public static boolean clearCacheFile(File directory) {
+        if (directory == null || !directory.isDirectory()) {
+            System.out.println("clearCacheFile, could not clean directory");
+            return false;
+        }
+
+        boolean result = false;
+        String cacheFileName = directory.getName();
+        File xmlCacheFile = new File(directory, cacheFileName+".xml");
+
+        if (xmlCacheFile.exists()) {
+            result = xmlCacheFile.delete();
+
+            if (!result) {
+                System.out.println("clearCacheFile, could not delete " + xmlCacheFile.getName());
+            }
+        }
+        return result;
     }
 
     private int getLineOfCodeFromCache(File directory) {

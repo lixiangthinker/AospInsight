@@ -1,4 +1,4 @@
-package com.tonybuilder.utils;
+package com.tonybuilder.repo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import java.util.List;
 import com.tonybuilder.dao.ProjectEntityDao;
 import com.tonybuilder.dao.impl.ProjectEntityImpl;
 import com.tonybuilder.entities.ProjectEntity;
+import com.tonybuilder.utils.GlobalSettings;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.dom4j.Attribute;

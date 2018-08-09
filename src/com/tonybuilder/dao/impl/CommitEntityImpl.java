@@ -2,18 +2,14 @@ package com.tonybuilder.dao.impl;
 
 import com.tonybuilder.dao.CommitEntityDao;
 import com.tonybuilder.entities.CommitEntity;
-import com.tonybuilder.utils.DateTimeUtils;
+import com.tonybuilder.repo.DateTimeUtils;
 import com.tonybuilder.utils.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommitEntityImpl implements CommitEntityDao {

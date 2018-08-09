@@ -1,6 +1,6 @@
 package test.com.tonybuilder.utils;
 
-import com.tonybuilder.utils.GitLogUtil;
+import com.tonybuilder.repo.GitLogUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
@@ -8,8 +8,6 @@ import org.junit.After;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 /**
